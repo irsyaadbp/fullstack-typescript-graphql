@@ -1,18 +1,15 @@
-import { ThemeProvider, CSSReset, ColorModeProvider } from "@chakra-ui/core";
-import { Provider, createClient, dedupExchange, fetchExchange } from "urql";
+import { dedupExchange, fetchExchange } from "urql";
 import { cacheExchange } from "@urql/exchange-graphcache";
-
-import theme from "../theme";
 import {
+  LogoutMutation,
+  MeQuery,
   MeDocument,
   LoginMutation,
-  MeQuery,
   RegisterMutation,
-  LogoutMutation,
 } from "../generated/graphql";
-import { betterUpdateQuery } from "../utils/betterUpdateQuery";
+import { betterUpdateQuery } from "./betterUpdateQuery";
 
-const client = createClient({
+export const createUrqlClient = (ssrExchange: any) => ({
   url: "http://localhost:4000/graphql",
   fetchOptions: { credentials: "include" },
   exchanges: [
@@ -66,18 +63,3 @@ const client = createClient({
     fetchExchange,
   ],
 });
-
-function MyApp({ Component, pageProps }: any) {
-  return (
-    <Provider value={client}>
-      <ThemeProvider theme={theme}>
-        {/* <ColorModeProvider> */}
-        <CSSReset />
-        <Component {...pageProps} />
-        {/* </ColorModeProvider> */}
-      </ThemeProvider>
-    </Provider>
-  );
-}
-
-export default MyApp;
